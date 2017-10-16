@@ -27,16 +27,22 @@ namespace MotorTributarioNet.Impostos.CalulosDeBC
     {
         private readonly ITributavel _tributavel;
         private readonly TipoDesconto _tipoDesconto;
+        private readonly SimNao _incluirIpi;
 
-        public CalculaBaseCalculoCofins(ITributavel tributavel, TipoDesconto tipoDesconto) : base(tributavel)
+        public CalculaBaseCalculoCofins(ITributavel tributavel, TipoDesconto tipoDesconto, SimNao incluirIpi = SimNao.Nao) : base(tributavel)
         {
             _tributavel = tributavel;
             _tipoDesconto = tipoDesconto;
+            _incluirIpi = incluirIpi;
         }
 
         public decimal CalculaBaseCalculo()
         {
-            var baseCalculo = CalculaBaseDeCalculo();
+            var baseCalculo = (_tributavel.ValorProduto * _tributavel.QuantidadeProduto);
+            if (_incluirIpi == SimNao.Sim)
+            {
+                baseCalculo = baseCalculo + _tributavel.ValorIpi;
+            }
 
             return _tipoDesconto == TipoDesconto.Condincional ? CalculaIcmsComDescontoCondicional(baseCalculo) : CalculaIcmsComDescontoIncondicional(baseCalculo);
         }

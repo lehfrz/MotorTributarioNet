@@ -28,12 +28,14 @@ namespace MotorTributarioNet.Impostos.Tributacoes
     public class TributacaoCofins
     {
         private readonly ITributavel _tributavel;
+        private readonly SimNao _incluirIPI;
         private readonly CalculaBaseCalculoCofins _calculaBaseCalculoCofins;
 
-        public TributacaoCofins(ITributavel tributavel, TipoDesconto tipoDesconto)
+        public TributacaoCofins(ITributavel tributavel, TipoDesconto tipoDesconto, SimNao incluirIPI = SimNao.Nao)
         {
             _tributavel = tributavel ?? throw new ArgumentNullException(nameof(tributavel));
-            _calculaBaseCalculoCofins = new CalculaBaseCalculoCofins(_tributavel, tipoDesconto);
+            _incluirIPI = incluirIPI;
+            _calculaBaseCalculoCofins = new CalculaBaseCalculoCofins(_tributavel, tipoDesconto, _incluirIPI);
         }
 
         public IResultadoCalculoCofins Calcula()
